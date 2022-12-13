@@ -22,6 +22,23 @@ test_that("filter data", {
                   `Published-at` <= "2022-10-29")
   expect_equal(data_result, data_expect)
 
+  # filter data with multiples categorica values in rows
+  hope_health <- c("Health Technology", "Medical/Clinical Trials")
+  hope_corruption <- "Corporate Crime"
+  test_list <- list("id_country_region" = c("United States", "Mexico", "Brazil"),
+                    "id_health_categories" = hope_health,
+                    "id_corruption_categories" = hope_corruption)
+  data_result <- data_filter(data = data_pharma,
+                             dic = dic_pharma,
+                             var_inputs = test_list,
+                             .id = "story-id")
+  result_health <- strsplit(data_result$`Health Categories`, split = "-") |>
+    unlist() |>
+    unique()
+
+  expect_equal(result_health, hope_health)
+  expect_equal(unique(data_result$`Corruption Categories`), hope_corruption)
+
 })
 
 

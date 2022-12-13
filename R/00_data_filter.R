@@ -1,5 +1,5 @@
 #' @export
-data_filter <- function(data, dic, var_inputs) {
+data_filter <- function(data, dic, var_inputs, .id) {
   if (is.null(data)) return()
   if (is.null(dic)) return()
   df <- data
@@ -15,7 +15,11 @@ data_filter <- function(data, dic, var_inputs) {
         filter_var <- var_inputs[[.x]]
         if (info_var$ftype == "Date") {
           df <<- filter_dates(df, range_date = filter_var, by = info_var$label)
-        } else {
+        }
+        if (info_var$ftype == "list") {
+          df <<- filter_list(df, filter_var, info_var$label, .id = .id)
+        }
+        if (info_var$ftype == "character") {
           df <<- df |>
             dplyr::filter(!!dplyr::sym(info_var$label) %in% filter_var)
         }
