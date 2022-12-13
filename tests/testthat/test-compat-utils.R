@@ -29,3 +29,18 @@ test_that("filter dates", {
 
 
 })
+
+
+test_that("filter variables with multiple cats in same rows", {
+
+  var_expect <- c("Health Technology", "Medical/Clinical Trials")
+  data_result <- filter_list(data = data_pharma,
+                             cats = var_expect,
+                              by = "Health Categories",
+                             .id = "story-id")
+  result <- strsplit(data_result$`Health Categories`, split = "-") |>
+    unlist() |>
+    unique()
+  expect_equal(result, var_expect)
+
+})

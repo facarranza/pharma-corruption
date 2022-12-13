@@ -19,3 +19,24 @@ filter_dates <- function(data, range_date, by) {
   data_filter
 
 }
+
+paste_vector <- function(x, collapse = "-") {
+  paste0(trimws(unique(x)), collapse = collapse)
+}
+
+# filter variables with several categories in one row
+filter_list <- function(data, cats, by, .id) {
+  if (is.null(data)) return()
+  if (is.null(cats)) return()
+  if (is.null(by)) return()
+
+  temporal_df <- data[,c(.id, by)] |>
+    tidyr::separate_rows({{ by }}, sep = "-") |>
+    dplyr::filter(!!dplyr::sym(by) %in% cats) |>
+    group_by(!!dplyr::sym(.id)) |>
+    summarise_each(funs(paste_vector))
+  data <- data[, -grep(by, names(data))]
+  data <- data |> dplyr::inner_join(temporal_df)
+  data
+}
+
