@@ -13,7 +13,7 @@ data_filter <- function(data, dic, var_inputs) {
         info_var <- dic |>
           dplyr::filter(id %in% name_var)
         filter_var <- var_inputs[[.x]]
-        if (info_var$ftype == "Dat") {
+        if (info_var$ftype == "Date") {
           df <<- filter_dates(df, range_date = filter_var, by = info_var$label)
         } else {
           df <<- df |>
