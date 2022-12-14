@@ -33,7 +33,7 @@ ui <- panelsPage(
         width = 300,
         color = "chardonnay",
         body =  div(
-          "panel 3"
+          uiOutput("click_info")
         ),
         footer =  div(class = "footer-logos",
                       tags$a(
@@ -168,6 +168,8 @@ server <- function(input, output, session) {
 
 
 
+  # Render Viz --------------------------------------------------------------
+
   viz_down <- reactive({
     req(data_viz())
     viz <- viz_selection(data_viz(), dic_pharma, actual_but$active)
@@ -224,6 +226,16 @@ server <- function(input, output, session) {
         type = "html", loader = "loader4"
       )
     }
+  })
+
+
+  # Click Info --------------------------------------------------------------
+
+  output$click_info <- renderUI({
+    tx <- HTML("<div class = 'click'>
+               <img src='img/click/click.svg' class = 'click-img'/><br/>
+               <b>Click</b> on the visualization to see more information..")
+    tx
   })
 
   # downloads ---------------------------------------------------------------

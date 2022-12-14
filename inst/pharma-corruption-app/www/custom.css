@@ -169,5 +169,11 @@
   align-items: center;
 }
 
+.click {
+  text-align: center;
+}
 
-
+.click-img {
+  margin-top: 20%;
+  margin-bottom: 5%;
+}
