@@ -153,3 +153,21 @@
 .form-group {
   margin-bottom: 0px !important;
 }
+
+
+/* STYLES LOGOS*/
+.panel-footer {
+  padding: 1rem 1rem !important;
+  border-top: 1px solid #D8D8D8;
+  margin: 0px 9px;
+}
+
+.footer-logos {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+
+
+

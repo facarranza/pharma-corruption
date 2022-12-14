@@ -10,7 +10,6 @@ ui <- panelsPage(
         id = "pharma-panel",
         can_collapse = TRUE,
         width = 350,
-        color = "chardonnay",
         body =  div(
           uiOutput("controls")
         )
@@ -25,7 +24,7 @@ ui <- panelsPage(
           uiOutput("downloads")
         ),
         body =  div(
-          verbatimTextOutput("test")
+          uiOutput("viz_view")
         )
   ),
   panel(title = "Detail",
@@ -35,6 +34,14 @@ ui <- panelsPage(
         color = "chardonnay",
         body =  div(
           "panel 3"
+        ),
+        footer =  div(class = "footer-logos",
+                      tags$a(
+                        href="https://www.datasketch.co", target="blank",
+                        img(src= 'img/logos/logo_ds.svg',
+                            align = "left", width = 130, height = 70)),
+                      img(src= 'img/logos/logo_ins.svg',
+                          width = 150, height = 150)
         )
   )
 )
@@ -140,9 +147,14 @@ server <- function(input, output, session) {
     df <- data_filter(data = data_pharma,
                       dic = dic_pharma,
                       var_inputs = ls,
-                      .id = "story-id")
+                      .id = "story-id") |>
+      dplyr::select(-`Other Articles`, -entityname)
     df
   })
+
+
+
+  # data to viz -------------------------------------------------------------
 
   data_viz <- reactive({
     req(actual_but$active)
@@ -155,8 +167,63 @@ server <- function(input, output, session) {
 
 
 
-  output$test <- renderPrint({
-    data_viz()
+
+  viz_down <- reactive({
+    req(data_viz())
+    viz <- viz_selection(data_viz(), dic_pharma, actual_but$active)
+    suppressWarnings(do.call(eval(parse(text=viz)),
+                             list(data = data_viz())))
+  })
+
+  output$hgch_viz <- highcharter::renderHighchart({
+    req(actual_but$active)
+    if (actual_but$active %in% c("table", "map", "map_bubbles")) return()
+    viz_down()
+  })
+
+  output$lflt_viz <- leaflet::renderLeaflet({
+    req(actual_but$active)
+    if (!actual_but$active %in% c("map", "map_bubbles")) return()
+    viz_down()
+  })
+
+  output$dt_viz <- DT::renderDataTable({
+    req(actual_but$active)
+    if (actual_but$active != "table") return()
+    req(data_down())
+    df <- data_down()
+    dtable <- DT::datatable(df,
+                            rownames = F,
+                            selection = 'none',
+                            options = list(
+                              scrollX = T,
+                              fixedColumns = TRUE,
+                              fixedHeader = TRUE,
+                              scrollY = "500px"
+                            ))
+
+    dtable
+  })
+
+  output$viz_view <- renderUI({
+    req(actual_but$active)
+    viz <- actual_but$active
+    if (viz %in% c("map", "map_bubbles")) {
+      shinycustomloader::withLoader(
+        leaflet::leafletOutput("lflt_viz", height = 600),
+        type = "html", loader = "loader4"
+      )
+    } else if (viz == "table") {
+      shinycustomloader::withLoader(
+        DT::dataTableOutput("dt_viz", height = 600, width = 600 ),
+        type = "html", loader = "loader4"
+      )
+    } else {
+      shinycustomloader::withLoader(
+        highcharter::highchartOutput("hgch_viz", height = 600),
+        type = "html", loader = "loader4"
+      )
+    }
   })
 
   # downloads ---------------------------------------------------------------
