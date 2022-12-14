@@ -21,17 +21,16 @@ write_html <- function(data, dic, click, class_title, class_body, ...) {
                 htmltools::HTML(
                   paste0(
                     purrr::map(names(df)[-1], function(v) {
-                      name_text <- ""
+
+                      tx <- paste0("<div class = 'click-p'><div>", v, ":</div> <div class = 'click-subtitle'>",
+                                   df[[v]], "</div></div>", collapse = "")
                       if (v == "url") {
-                        name_text <- paste0("<a href=", v," target='_blank'>Link</a>")
-                      } else {
-                        name_text <- paste0("<p class = 'click-p'>", v, "</p>")
+                        tx <- paste0("<div>",
+                                     paste0("<a href=", df[[v]]," target='_blank'>Link</a>"),
+                                     "</div>")
                       }
-                      htmltools::HTML(
-                        paste0(name_text, ": ", df[[v]], collapse = "<br/>")
-                      )
-                    })
-                  )
+                      tx
+                    }), collapse = "</br>" )
                 )
             )
           )
