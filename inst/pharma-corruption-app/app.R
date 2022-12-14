@@ -25,7 +25,7 @@ ui <- panelsPage(
           uiOutput("downloads")
         ),
         body =  div(
-          "panel 2"
+          verbatimTextOutput("test")
         )
   ),
   panel(title = "Detail",
@@ -132,16 +132,34 @@ server <- function(input, output, session) {
                   env = environment())
 
 
+
+  # Data filter -------------------------------------------------------------
+
+  data_filter <- reactive({
+    ls <- parmesan_input()
+    pharma.corruption::data_filter(data = data_pharma,
+                                   dic = dic_pharma,
+                                   var_inputs = ls,
+                                   .id = "story-id")
+  })
+
+
+
+  output$test <- renderPrint({
+    parmesan_input()
+    # data_filter()
+  })
+
   # downloads ---------------------------------------------------------------
 
   output$downloads <- renderUI({
     if (is.null(actual_but$active)) return()
     if (actual_but$active != "table") {
-    dsmodules::downloadImageUI("download_viz",
-                               dropdownLabel ="Download",
-                               formats = c("jpeg", "pdf", "png", "html"),
-                               display = "dropdown",
-                               text = "Descargar")
+      dsmodules::downloadImageUI("download_viz",
+                                 dropdownLabel ="Download",
+                                 formats = c("jpeg", "pdf", "png", "html"),
+                                 display = "dropdown",
+                                 text = "Descargar")
     } else {
       dsmodules::downloadTableUI("dropdown_table",
                                  dropdownLabel = "Download",

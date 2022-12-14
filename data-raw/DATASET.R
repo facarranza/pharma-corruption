@@ -12,7 +12,8 @@ library(purrr)
 data_pharma <- stream_in(file("data-raw/data/aimon.json"))
 data_pharma$`Published-at` <- lubridate::as_date(
   lubridate::ymd_hms(data_pharma$`Published Date`))
-
+data_pharma$`Corruption Case Study`[data_pharma$`Corruption Case Study`] <- "Yes"
+data_pharma$`Corruption Case Study`[is.na(data_pharma$`Corruption Case Study`)] <- "No"
 
 # create dic --------------------------------------------------------------
 
