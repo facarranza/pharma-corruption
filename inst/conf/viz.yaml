@@ -1,8 +1,8 @@
 map:
  - Country/Region
 map_bubbles:
- - location.lat
  - location.lon
+ - location.lat
 line:
  - Year
  - Health Categories

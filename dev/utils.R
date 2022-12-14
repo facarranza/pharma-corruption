@@ -10,6 +10,8 @@ usethis::use_test("data_filter")
 usethis::use_test("variable_selection")
 # add test to var_aggregation
 usethis::use_test("var_aggregation")
+# add test to viz select
+usethis::use_test("viz_selection")
 
 # build
 devtools::load_all()
