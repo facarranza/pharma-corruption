@@ -99,7 +99,7 @@
 
 /* STYLES TO DATES INPUTS */
 .shinyinvoer-date-range-container {
-  margin-top: -11px !important;
+  margin-top: -5px !important;
 }
 
 .shinyinvoer-date-range-select p {
@@ -133,7 +133,7 @@
     width: 100%;
 }
 
-/* STYLES TO switch INPUT */
+/* STYLES TO switch INPUT
 .switch-state:checked + .switch-display {
   background-color: #E73247;
   color: #ffffff;
@@ -143,5 +143,13 @@
   border-color: #E73247;
   transform: translateX(100%);
 }
+*/
 
+.shiny-options-group {
+  display: flex !important;
+  gap: 20px !important;
+}
 
+.form-group {
+  margin-bottom: 0px !important;
+}
