@@ -12,6 +12,9 @@ usethis::use_test("variable_selection")
 usethis::use_test("var_aggregation")
 # add test to viz select
 usethis::use_test("viz_selection")
+# add test click info
+usethis::use_test("write_html")
+
 
 # build
 devtools::load_all()
