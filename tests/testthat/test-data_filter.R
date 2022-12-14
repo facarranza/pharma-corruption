@@ -39,6 +39,13 @@ test_that("filter data", {
   expect_equal(result_health, hope_health)
   expect_equal(unique(data_result$`Corruption Categories`), hope_corruption)
 
+  # filter numeric var
+  test_list <- list("id_location_lat" = 43.16,
+                    "id_location_lon" = -4.09)
+  data_result <- data_filter(data = data_pharma,
+                             dic = dic_pharma,
+                             var_inputs = test_list)
+  expect_equal(unique(data_result$location.lat), 43.16)
 })
 
 

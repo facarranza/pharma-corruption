@@ -23,6 +23,10 @@ data_filter <- function(data, dic, var_inputs, .id) {
           df <<- df |>
             dplyr::filter(!!dplyr::sym(info_var$label) %in% filter_var)
         }
+        if (info_var$ftype == "numeric") {
+          df <<- df |>
+            dplyr::filter(!!dplyr::sym(info_var$label) == filter_var)
+        }
       }
     })
   rm(tem_ls)
