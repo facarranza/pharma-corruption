@@ -26,7 +26,7 @@ dic_pharma <- dplyr::tibble(id = id_names,
 
 # list as vectors ---------------------------------------------------------
 
-paste_vector <- function(x, collapse = "-") {
+paste_vector <- function(x, collapse = ",") {
   paste0(trimws(unique(x)), collapse = collapse)
 }
 

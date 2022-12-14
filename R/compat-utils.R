@@ -20,7 +20,7 @@ filter_dates <- function(data, range_date, by) {
 
 }
 
-paste_vector <- function(x, collapse = "-") {
+paste_vector <- function(x, collapse = ",") {
   paste0(trimws(unique(x)), collapse = collapse)
 }
 
@@ -31,10 +31,10 @@ filter_list <- function(data, cats, by, .id) {
   if (is.null(by)) return()
 
   temporal_df <- data[,c(.id, by)] |>
-    tidyr::separate_rows({{ by }}, sep = "-") |>
+    tidyr::separate_rows({{ by }}, sep = ",") |>
     dplyr::filter(!!dplyr::sym(by) %in% cats) |>
-    group_by(!!dplyr::sym(.id)) |>
-    summarise_each(funs(paste_vector))
+    dplyr::group_by(!!dplyr::sym(.id)) |>
+    dplyr::summarise_each(dplyr::funs(paste_vector))
   data <- data[, -grep(by, names(data))]
   data <- data |> dplyr::inner_join(temporal_df)
   data

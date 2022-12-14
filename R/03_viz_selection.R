@@ -7,7 +7,9 @@ viz_selection <- function(data, dic, viz) {
 
   dic_viz <- dic |>
     dplyr::filter(label %in% names(data))
-  dic_viz$ftype <- dplyr::recode(dic_viz$ftype, "character" = "Cat")
+  dic_viz$ftype <- dplyr::recode(dic_viz$ftype,
+                                 "character" = "Cat",
+                                 "list" = "Cat")
   library <- "hgchmagic"
   pseudonym <- "hgch"
 
@@ -31,6 +33,7 @@ viz_selection <- function(data, dic, viz) {
   viz_type <- paste0(library, "::",
                      pseudonym, "_",
                      viz, "_",
-                     paste0(dic_viz$ftype, "Num"))
+                     paste0(dic_viz$ftype, collapse = ""),
+                     "Num")
   viz_type
 }

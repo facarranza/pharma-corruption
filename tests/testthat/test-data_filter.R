@@ -32,7 +32,7 @@ test_that("filter data", {
                              dic = dic_pharma,
                              var_inputs = test_list,
                              .id = "story-id")
-  result_health <- strsplit(data_result$`Health Categories`, split = "-") |>
+  result_health <- strsplit(data_result$`Health Categories`, split = ",") |>
     unlist() |>
     unique()
 

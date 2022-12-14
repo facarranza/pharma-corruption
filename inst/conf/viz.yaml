@@ -4,8 +4,8 @@ map_bubbles:
  - location.lon
  - location.lat
 line:
- - Year
  - Health Categories
+ - Published-at
 bar:
  - Corruption Categories
 
