@@ -135,19 +135,28 @@ server <- function(input, output, session) {
 
   # Data filter -------------------------------------------------------------
 
-  data_filter <- reactive({
+  data_down <- reactive({
     ls <- parmesan_input()
-    pharma.corruption::data_filter(data = data_pharma,
-                                   dic = dic_pharma,
-                                   var_inputs = ls,
-                                   .id = "story-id")
+    df <- data_filter(data = data_pharma,
+                      dic = dic_pharma,
+                      var_inputs = ls,
+                      .id = "story-id")
+    df
+  })
+
+  data_viz <- reactive({
+    req(actual_but$active)
+    if (actual_but$active == "table") return()
+    req(data_down())
+    data_down() |>
+      variable_selection(viz = actual_but$active) |>
+      var_aggregation(dic_pharma, Total = dplyr::n())
   })
 
 
 
   output$test <- renderPrint({
-    parmesan_input()
-    # data_filter()
+    data_viz()
   })
 
   # downloads ---------------------------------------------------------------
