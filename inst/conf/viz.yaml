@@ -1,0 +1,11 @@
+map:
+ - Country/Region
+map_bubbles:
+ - location.lat
+ - location.lon
+line:
+ - Year
+ - Health Categories
+bar:
+ - Corruption Categories
+
