@@ -1,0 +1,71 @@
+---
+id_title:
+  show: true
+  input_type: searchInput
+  input_params:
+    data: title_opts()
+    placeholder: title_holder()
+id_country_region:
+  show: true
+  input_type: selectizeInput
+  input_params:
+    label: Country
+    choices: countries_opts()
+    multiple: true
+    options:
+      placeholder: All
+      plugins:
+      - - remove_button
+      - - drag_drop
+id_published_at:
+  show: true
+  input_type: dateRangeInput
+  input_params:
+    min: min_date()
+    max: max_date()
+    start: min_date()
+    end: max_date()
+    startLabel: From
+    endLabel: To
+id_corruption_case_study:
+  show: true
+  input_type: toggleSwitchInput
+  input_params:
+    label: study_label()
+    value: true
+    on_label: 'Yes'
+    off_label: 'No'
+id_health_categories:
+  show: true
+  input_type: selectizeInput
+  input_params:
+    label: Health-related news topics
+    choices: health_opts()
+    multiple: true
+    options:
+      placeholder: All
+      plugins:
+      - - remove_button
+      - - drag_drop
+id_corruption_categories:
+  show: true
+  input_type: selectizeInput
+  input_params:
+    label: Corruption-related news topics
+    choices: corruption_opts()
+    multiple: true
+    options:
+      placeholder: All
+      plugins:
+      - - remove_button
+      - - drag_drop
+
+
+
+
+
+
+
+
+
+
