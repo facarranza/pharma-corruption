@@ -1,4 +1,6 @@
 library(dsmodules)
+library(hgchmagic)
+library(lfltmagic)
 library(parmesan)
 library(pharma.corruption)
 library(shiny)
@@ -33,8 +35,7 @@ ui <- panelsPage(
         width = 300,
         color = "chardonnay",
         body =  div(
-          uiOutput("click_info"),
-          verbatimTextOutput("test")
+          uiOutput("click_info")
         ),
         footer =  div(class = "footer-logos",
                       tags$a(
@@ -167,6 +168,66 @@ server <- function(input, output, session) {
   })
 
 
+  # viz styles --------------------------------------------------------------
+
+  viz_opts <- reactive({
+    req(data_viz())
+    req(actual_but$active)
+
+    myFunc <- NULL
+    if (actual_but$active %in% c("bar", "treemap")) {
+      myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {id:event.point.name, timestamp: new Date().getTime()});}")
+    }
+    if (actual_but$active %in% c("line")) {
+        myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {cat:this.name, id:event.point.category, timestamp: new Date().getTime()});}")
+    }
+
+      opts <- list(
+        data = data_viz(),
+        orientation = "hor",
+        ver_title = " ",
+        hor_title = " ",
+        label_wrap_legend = 100,
+        label_wrap = 40,
+        background_color = "#ffffff",
+        axis_line_y_size = 1,
+        axis_line_color = "#dbd9d9",
+        grid_y_color = "#dbd9d9",
+        grid_x_color = "#fafafa",
+        cursor = "pointer",
+        map_tiles = "OpenStreetMap",
+        legend_position = "bottomleft",
+        border_weight = 0.3
+      )
+      if (actual_but$active == "map_bubbles") {
+        opts$legend_show <- FALSE
+        opts$map_min_size <- 2
+        opts$map_max_size <- 3
+        opts$na_color <- "transparent"
+      }
+    if (actual_but$active == "map") {
+      opts$na_color <- "transparent"
+      opts$palette_colors <- rev(c("#ef4e00", "#f66a02", "#fb8412", "#fd9d29",
+                                     "#ffb446", "#ffca6b", "#ffdf98"))
+    } else {
+      opts$clickFunction <- htmlwidgets::JS(myFunc)
+      opts$palette_colors <- "#ef4e00"
+      if (actual_but$active == "line") {
+        opts$marker_enabled <- FALSE
+        opts$palette_colors <- c("#ef4e00", "#ffe700", "#6fcbff", "#62ce00",
+                                   "#ffeea8", "#da3592","#0000ff")
+      }
+    }
+
+    if (actual_but$active == "treemap") {
+      opts$dataLabels_align <- "middle"
+      opts$dataLabels_inside <- TRUE
+      opts$dataLabels_show <- TRUE
+      opts$legend_show <- FALSE
+    }
+
+    opts
+  })
 
 
   # Render Viz --------------------------------------------------------------
@@ -174,8 +235,7 @@ server <- function(input, output, session) {
   viz_down <- reactive({
     req(data_viz())
     viz <- viz_selection(data_viz(), dic_pharma, actual_but$active)
-    suppressWarnings(do.call(eval(parse(text=viz)),
-                             list(data = data_viz())))
+    suppressWarnings(do.call(eval(parse(text=viz)),viz_opts()))
   })
 
   output$hgch_viz <- highcharter::renderHighchart({
@@ -249,14 +309,21 @@ server <- function(input, output, session) {
         click_viz$info <- list("id_country_region" = click$id)
       }
     }
+    if (actual_but$active == "line") {
+      click <- input$hcClicked
+      if (!is.null(click)) {
+        click_viz$info <- list("id_health_categories" = click$cat,
+                               "id_published_at" = click$id)
+      }
+    }
+    if (actual_but$active %in% c("bar", "treemap")) {
+      click <- input$hcClicked
+      if (!is.null(click)) {
+        click_viz$info <- list("id_corruption_categories" = click$id)
+      }
+    }
   })
 
-
-  output$test <- renderPrint({
-
-    click_viz$info
-
-  })
 
   # Click Info --------------------------------------------------------------
 
