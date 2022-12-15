@@ -35,7 +35,10 @@ ui <- panelsPage(
         width = 300,
         color = "chardonnay",
         body =  div(
-          uiOutput("click_info")
+          shinycustomloader::withLoader(
+            uiOutput("click_info"),
+            type = "html", loader = "loader4"
+          )
         ),
         footer =  div(class = "footer-logos",
                       tags$a(
@@ -179,43 +182,43 @@ server <- function(input, output, session) {
       myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {id:event.point.name, timestamp: new Date().getTime()});}")
     }
     if (actual_but$active %in% c("line")) {
-        myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {cat:this.name, id:event.point.category, timestamp: new Date().getTime()});}")
+      myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {cat:this.name, id:event.point.category, timestamp: new Date().getTime()});}")
     }
 
-      opts <- list(
-        data = data_viz(),
-        orientation = "hor",
-        ver_title = " ",
-        hor_title = " ",
-        label_wrap_legend = 100,
-        label_wrap = 40,
-        background_color = "#ffffff",
-        axis_line_y_size = 1,
-        axis_line_color = "#dbd9d9",
-        grid_y_color = "#dbd9d9",
-        grid_x_color = "#fafafa",
-        cursor = "pointer",
-        map_tiles = "OpenStreetMap",
-        legend_position = "bottomleft",
-        border_weight = 0.3
-      )
-      if (actual_but$active == "map_bubbles") {
-        opts$legend_show <- FALSE
-        opts$map_min_size <- 2
-        opts$map_max_size <- 3
-        opts$na_color <- "transparent"
-      }
+    opts <- list(
+      data = data_viz(),
+      orientation = "hor",
+      ver_title = " ",
+      hor_title = " ",
+      label_wrap_legend = 100,
+      label_wrap = 40,
+      background_color = "#ffffff",
+      axis_line_y_size = 1,
+      axis_line_color = "#dbd9d9",
+      grid_y_color = "#dbd9d9",
+      grid_x_color = "#fafafa",
+      cursor = "pointer",
+      map_tiles = "OpenStreetMap",
+      legend_position = "bottomleft",
+      border_weight = 0.3
+    )
+    if (actual_but$active == "map_bubbles") {
+      opts$legend_show <- FALSE
+      opts$map_min_size <- 2
+      opts$map_max_size <- 3
+      opts$na_color <- "transparent"
+    }
     if (actual_but$active == "map") {
       opts$na_color <- "transparent"
       opts$palette_colors <- rev(c("#ef4e00", "#f66a02", "#fb8412", "#fd9d29",
-                                     "#ffb446", "#ffca6b", "#ffdf98"))
+                                   "#ffb446", "#ffca6b", "#ffdf98"))
     } else {
       opts$clickFunction <- htmlwidgets::JS(myFunc)
       opts$palette_colors <- "#ef4e00"
       if (actual_but$active == "line") {
         opts$marker_enabled <- FALSE
         opts$palette_colors <- c("#ef4e00", "#ffe700", "#6fcbff", "#62ce00",
-                                   "#ffeea8", "#da3592","#0000ff")
+                                 "#ffeea8", "#da3592","#0000ff")
       }
     }
 
@@ -282,10 +285,10 @@ server <- function(input, output, session) {
         type = "html", loader = "loader4"
       )
     } else {
-      shinycustomloader::withLoader(
-        highcharter::highchartOutput("hgch_viz", height = 600),
-        type = "html", loader = "loader4"
-      )
+      #shinycustomloader::withLoader(
+        highcharter::highchartOutput("hgch_viz", height = 600)#,
+      #   type = "html", loader = "loader4"
+      # )
     }
   })
 
@@ -338,6 +341,7 @@ server <- function(input, output, session) {
                      click = click_viz$info,
                      class_title = "click-title",
                      class_body = "click-text",
+                     id = "story-id",
                      "Title",
                      "Country/Region",
                      "Published-at",

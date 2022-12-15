@@ -1,11 +1,12 @@
 #' @export
-write_html <- function(data, dic, click, class_title, class_body, ...) {
+write_html <- function(data, dic, click, class_title, class_body, id = NULL, ...) {
   if (is.null(data)) return()
   if (is.null(dic)) return()
   if (is.null(click)) return()
   data_click <- data_filter(data = data,
                             dic = dic,
-                            var_inputs = click)
+                            var_inputs = click,
+                            .id = id)
   data_click <- data_click |> dplyr::select(...)
   info_click <- names(data_click)
 
