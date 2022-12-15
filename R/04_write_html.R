@@ -22,7 +22,7 @@ write_html <- function(data, dic, click, class_title, class_body, ...) {
                   paste0(
                     purrr::map(names(df)[-1], function(v) {
 
-                      tx <- paste0("<div class = 'click-p'><div>", v, ":</div> <div class = 'click-subtitle'>",
+                      tx <- paste0("<div class = 'click-p'><div class = 'click-tl'>", v, ":</div> <div class = 'click-subtitle'>",
                                    df[[v]], "</div></div>", collapse = "")
                       if (v == "url") {
                         tx <- paste0("<div>",

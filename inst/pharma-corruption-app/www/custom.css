@@ -191,5 +191,23 @@
 .click-p {
   display: flex;
   gap: 5px;
+  margin-bottom: -10px;
 }
+
+.click-tl {
+  text-align: left;
+  font-size: 12px;
+  letter-spacing: 0.36px;
+  color: #3695D8;
+  opacity: 1;
+}
+
+.click-subtitle {
+  text-align: left;
+  font-size: 12px;
+  letter-spacing: 0.36px;
+  color: #000000;
+  opacity: 1;
+}
+
 
