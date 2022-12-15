@@ -177,3 +177,19 @@
   margin-top: 20%;
   margin-bottom: 5%;
 }
+
+/* STYLES CLICK INFO */
+
+.click-title {
+  text-align: left;
+  letter-spacing: 0.42px;
+  color: #000000;
+  font-weight: 500;
+  margin-bottom: 7px;
+}
+
+.click-p {
+  display: flex;
+  gap: 5px;
+}
+

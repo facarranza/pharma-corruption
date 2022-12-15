@@ -33,7 +33,8 @@ ui <- panelsPage(
         width = 300,
         color = "chardonnay",
         body =  div(
-          uiOutput("click_info")
+          uiOutput("click_info"),
+          verbatimTextOutput("test")
         ),
         footer =  div(class = "footer-logos",
                       tags$a(
@@ -229,12 +230,53 @@ server <- function(input, output, session) {
   })
 
 
+  # Captura click -----------------------------------------------------------
+
+  click_viz <- reactiveValues(info = NULL)
+
+  observe({
+    req(actual_but$active)
+    if (actual_but$active == "map_bubbles") {
+      click <- input$lflt_viz_marker_click
+      if (!is.null(click)) {
+        click_viz$info <- list("id_location_lat" = click$lat,
+                               "id_location_lon" = click$lng)
+      }
+    }
+    if (actual_but$active == "map") {
+      click <- input$lflt_viz_shape_click
+      if (!is.null(click)) {
+        click_viz$info <- list("id_country_region" = click$id)
+      }
+    }
+  })
+
+
+  output$test <- renderPrint({
+
+    click_viz$info
+
+  })
+
   # Click Info --------------------------------------------------------------
 
   output$click_info <- renderUI({
+    req(data_down())
     tx <- HTML("<div class = 'click'>
                <img src='img/click/click.svg' class = 'click-img'/><br/>
-               <b>Click</b> on the visualization to see more information..")
+               <b>Click</b> on the visualization to see more information.")
+    if (is.null(click_viz$info)) return(tx)
+    tx <- write_html(data = data_down(),
+                     dic = dic_pharma,
+                     click = click_viz$info,
+                     class_title = "click-title",
+                     class_body = "click-text",
+                     "Title",
+                     "Country/Region",
+                     "Published-at",
+                     "Health Categories",
+                     "Corruption Categories",
+                     "url")
     tx
   })
 
