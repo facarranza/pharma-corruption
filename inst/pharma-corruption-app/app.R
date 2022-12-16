@@ -1,3 +1,4 @@
+webshot::install_phantomjs()
 library(dsmodules)
 library(hgchmagic)
 library(lfltmagic)
