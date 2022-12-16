@@ -165,6 +165,7 @@ server <- function(input, output, session) {
     req(actual_but$active)
     if (actual_but$active == "table") return()
     req(data_down())
+    if (nrow(data_down()) == 0) return()
     data_down() |>
       variable_selection(viz = actual_but$active) |>
       var_aggregation(dic_pharma, Total = dplyr::n())
@@ -243,12 +244,14 @@ server <- function(input, output, session) {
 
   output$hgch_viz <- highcharter::renderHighchart({
     req(actual_but$active)
+    req(data_viz())
     if (actual_but$active %in% c("table", "map", "map_bubbles")) return()
     viz_down()
   })
 
   output$lflt_viz <- leaflet::renderLeaflet({
     req(actual_but$active)
+    req(data_viz())
     if (!actual_but$active %in% c("map", "map_bubbles")) return()
     viz_down()
   })
@@ -273,6 +276,8 @@ server <- function(input, output, session) {
 
   output$viz_view <- renderUI({
     req(actual_but$active)
+    if (is.null(data_viz())) return("No information available")
+
     viz <- actual_but$active
     if (viz %in% c("map", "map_bubbles")) {
       shinycustomloader::withLoader(
@@ -331,11 +336,11 @@ server <- function(input, output, session) {
   # Click Info --------------------------------------------------------------
 
   output$click_info <- renderUI({
-    req(data_down())
     tx <- HTML("<div class = 'click'>
                <img src='img/click/click.svg' class = 'click-img'/><br/>
                <b>Click</b> on the visualization to see more information.")
     if (is.null(click_viz$info)) return(tx)
+    if (is.null(data_viz())) return("No information available")
     tx <- write_html(data = data_down(),
                      dic = dic_pharma,
                      click = click_viz$info,
