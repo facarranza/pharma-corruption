@@ -98,7 +98,7 @@ server <- function(input, output, session) {
   })
 
   countries_opts <- reactive({
-    unique(data_pharma$`Country/Region`) |>
+    unique(c("All", data_pharma$`Country/Region`)) |>
       setdiff("NA")
   })
 
@@ -120,14 +120,14 @@ server <- function(input, output, session) {
   })
 
   health_opts <- reactive({
-    strsplit(data_pharma$`Health Categories`, split = ",") |>
+    strsplit(c("All", data_pharma$`Health Categories`), split = ",") |>
       unlist() |>
       unique() |>
       setdiff("NA")
   })
 
   corruption_opts <- reactive({
-    strsplit(data_pharma$`Corruption Categories`, split = ",") |>
+    strsplit(c("All", data_pharma$`Corruption Categories`), split = ",") |>
       unlist() |>
       unique() |>
       setdiff("NA")
@@ -143,6 +143,22 @@ server <- function(input, output, session) {
   output_parmesan("controls",
                   input = input, output = output, session = session,
                   env = environment())
+
+
+
+  # updates all -------------------------------------------------------------
+
+  observe({
+    if ("All" %in% input$id_country_region) {
+      updateSelectizeInput(session, inputId = "id_country_region", selected = "All")
+    }
+    if ("All" %in% input$id_health_categories) {
+      updateSelectizeInput(session, inputId = "id_health_categories", selected = "All")
+    }
+    if ("All" %in% input$id_corruption_categories) {
+      updateSelectizeInput(session, inputId = "id_corruption_categories", selected = "All")
+    }
+  })
 
 
 
@@ -217,15 +233,15 @@ server <- function(input, output, session) {
     if (actual_but$active == "map") {
       opts$na_color <- "transparent"
       opts$palette_colors <- rev(c("#ef4e00", "#f66a02", "#fb8412", "#fd9d29",
-                                   "#ffb446", "#ffca6b", "#ffdf98"))
+                                            "#ffb446", "#ffca6b", "#ffdf98"))
     } else {
       opts$clickFunction <- htmlwidgets::JS(myFunc)
       opts$palette_colors <- "#ef4e00"
-      if (actual_but$active == "line") {
-        opts$marker_enabled <- FALSE
-        opts$palette_colors <- c("#ef4e00", "#ffe700", "#6fcbff", "#62ce00",
-                                 "#ffeea8", "#da3592","#0000ff")
-      }
+        if (actual_but$active == "line") {
+          opts$marker_enabled <- FALSE
+          opts$palette_colors <- c("#ef4e00", "#ffe700", "#6fcbff", "#62ce00",
+                                            "#ffeea8", "#da3592","#0000ff")
+        }
     }
 
     if (actual_but$active == "treemap") {
@@ -283,7 +299,7 @@ server <- function(input, output, session) {
   output$viz_view <- renderUI({
     req(actual_but$active)
     if (actual_but$active != "table") {
-    if (is.null(data_viz())) return("No information available")
+      if (is.null(data_viz())) return("No information available")
     }
 
     viz <- actual_but$active
@@ -299,7 +315,7 @@ server <- function(input, output, session) {
       )
     } else {
       #shinycustomloader::withLoader(
-        highcharter::highchartOutput("hgch_viz", height = 600)#,
+      highcharter::highchartOutput("hgch_viz", height = 600)#,
       #   type = "html", loader = "loader4"
       # )
     }
