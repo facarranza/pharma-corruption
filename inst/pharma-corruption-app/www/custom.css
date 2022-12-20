@@ -39,6 +39,7 @@ p {
 #pharma-detail_body {
   padding: 0 1rem !important;
   font-family: inherit;
+  overflow-x: hidden !important;
 }
 
 /* STYLES TO VIZ ICONS */

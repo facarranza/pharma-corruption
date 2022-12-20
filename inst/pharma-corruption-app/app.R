@@ -326,22 +326,35 @@ server <- function(input, output, session) {
 
   click_viz <- reactiveValues(info = NULL)
 
-  observe({
+  observeEvent(input$lflt_viz_marker_click, {
+    if (is.null(data_viz())) return()
+    if (!"location.lat" %in% names(data_viz())) return()
     req(actual_but$active)
-    if (actual_but$active == "map_bubbles") {
+    if (actual_but$active != "map_bubbles") return()
       click <- input$lflt_viz_marker_click
       if (!is.null(click)) {
         click_viz$info <- list("id_location_lat" = click$lat,
                                "id_location_lon" = click$lng)
       }
+
+  })
+
+  observeEvent(input$lflt_viz_shape_click, {
+    if (is.null(data_viz())) return()
+    if (!"Country/Region" %in% names(data_viz())) return()
+    req(actual_but$active)
+    if (actual_but$active != "map") return()
+    click <- input$lflt_viz_shape_click
+    if (!is.null(click)) {
+      click_viz$info <- list("id_country_region" = click$id)
     }
-    if (actual_but$active == "map") {
-      click <- input$lflt_viz_shape_click
-      if (!is.null(click)) {
-        click_viz$info <- list("id_country_region" = click$id)
-      }
-    }
+
+  })
+
+  observeEvent(input$hcClicked, {
+    if (is.null(data_viz())) return()
     if (actual_but$active == "line") {
+      if (!"Published-at" %in% names(data_viz())) return()
       click <- input$hcClicked
       if (!is.null(click)) {
         click_viz$info <- list("id_health_categories" = click$cat,
@@ -349,6 +362,7 @@ server <- function(input, output, session) {
       }
     }
     if (actual_but$active %in% c("bar", "treemap")) {
+      if (!"Corruption Categories" %in% names(data_viz())) return()
       click <- input$hcClicked
       if (!is.null(click)) {
         click_viz$info <- list("id_corruption_categories" = click$id)
@@ -365,6 +379,7 @@ server <- function(input, output, session) {
                <b>Click</b> on the visualization to see more information.")
     if (is.null(click_viz$info)) return(tx)
     if (is.null(data_viz())) return("No information available")
+    if (nrow(data_viz()) == 0) return("No information available")
     tx <- write_html(data = data_down(),
                      dic = dic_pharma,
                      click = click_viz$info,
