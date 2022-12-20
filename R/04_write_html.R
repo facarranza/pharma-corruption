@@ -16,8 +16,12 @@ write_html <- function(data, dic, click, class_title, class_body, id = NULL, ...
         df <- data_click |> dplyr::filter(!!dplyr::sym(info_click[1]) %in% x)
         htmltools::HTML(
           paste0(
+
             div(class = class_title,
-                x),
+                htmltools::HTML(
+                  paste0(
+                    "<q>", x, "</q>")
+                )),
             div(class = class_body,
                 htmltools::HTML(
                   paste0(
@@ -26,9 +30,12 @@ write_html <- function(data, dic, click, class_title, class_body, id = NULL, ...
                       tx <- paste0("<div class = 'click-p'><div class = 'click-tl'>", v, ":</div> <div class = 'click-subtitle'>",
                                    df[[v]], "</div></div>", collapse = "")
                       if (v == "url") {
-                        tx <- paste0("<div>",
-                                     paste0("<a href=", df[[v]]," target='_blank'>Link</a>"),
-                                     "</div>")
+                        tx <- paste0("<div style='display:flex;justify-content: space-between;'><div>",
+                                     paste0("<a href=", df[[v]]," target='_blank'>Link &#8734;</a>"),
+                                     "</div>
+                                     <a class='btn report' href='mailto:ti-health@transparency.org?subject=Inquiry about news article'>
+                                     Report</a>
+                                     </div>")
                       }
                       tx
                     }), collapse = "</br>" )

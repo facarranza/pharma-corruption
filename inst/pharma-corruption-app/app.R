@@ -1,4 +1,4 @@
-webshot::install_phantomjs()
+webshot::install_phantomjs(force = FALSE)
 library(dsmodules)
 library(hgchmagic)
 library(lfltmagic)
@@ -31,7 +31,7 @@ ui <- panelsPage(
         )
   ),
   panel(title = "Detail",
-        id = "pharma-panel",
+        id = "pharma-detail",
         can_collapse = TRUE,
         width = 300,
         color = "chardonnay",
@@ -200,6 +200,8 @@ server <- function(input, output, session) {
       grid_y_color = "#dbd9d9",
       grid_x_color = "#fafafa",
       cursor = "pointer",
+      map_zoom_snap = 0.25,
+      map_zoom_delta = 0.25,
       map_tiles = "OpenStreetMap",
       legend_position = "bottomleft",
       border_weight = 0.3
@@ -254,7 +256,8 @@ server <- function(input, output, session) {
     req(actual_but$active)
     req(data_viz())
     if (!actual_but$active %in% c("map", "map_bubbles")) return()
-    viz_down()
+    viz_down() |>
+      leaflet::setView(lng = 0, lat = -5, 1.25)
   })
 
   output$dt_viz <- DT::renderDataTable({
@@ -277,7 +280,9 @@ server <- function(input, output, session) {
 
   output$viz_view <- renderUI({
     req(actual_but$active)
+    if (actual_but$active != "table") {
     if (is.null(data_viz())) return("No information available")
+    }
 
     viz <- actual_but$active
     if (viz %in% c("map", "map_bubbles")) {

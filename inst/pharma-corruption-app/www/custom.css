@@ -1,3 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+html,
+ body {
+   font-family: 'Roboto', sans-serif;
+ }
+
+
+a {
+  color: #3695D8 !important;
+  font-family: inherit;
+}
+
+p {
+  font-family: inherit;
+}
 
 /* STYLES HEAD */
 .top-chardonnay {
@@ -7,6 +23,7 @@
   letter-spacing: 0.8px;
   color: #3695D8;
   text-transform: capitalize
+  font-family: inherit;
 }
 
 .panel-header {
@@ -16,6 +33,12 @@
 
 .panel-body {
   margin-left: 6px;
+  font-family: inherit;
+}
+
+#pharma-detail_body {
+  padding: 0 1rem !important;
+  font-family: inherit;
 }
 
 /* STYLES TO VIZ ICONS */
@@ -69,6 +92,7 @@
   background: #E73247 0% 0% no-repeat padding-box;
   border-radius: 18px;
   opacity: 1;
+  font-family: inherit;
 }
 
 .dropdown-action-trigger:hover {
@@ -95,6 +119,7 @@
 }
 .control-label {
   color: #000;
+  font-family: inherit;
 }
 
 /* STYLES TO DATES INPUTS */
@@ -122,6 +147,7 @@
   color: #00000;
   font-weight: 500;
   margin-bottom: 19px;
+  font-family: inherit;
 }
 
 .flatpickr-input[readonly] {
@@ -171,6 +197,7 @@
 
 .click {
   text-align: center;
+  font-family: inherit;
 }
 
 .click-img {
@@ -180,11 +207,22 @@
 
 /* STYLES CLICK INFO */
 
+q { quotes: '\201c' '\201d'; }
+q:before { content: open-quote; }
+q:after  { content: close-quote; }
+
+.click-text {
+  border-left: 1px solid #3695D8;
+  padding-left: 3%;
+  font-family: inherit;
+}
+
 .click-title {
   text-align: left;
   letter-spacing: 0.42px;
   color: #000000;
   font-weight: 500;
+  font-family: inherit;
   margin-bottom: 7px;
 }
 
@@ -199,6 +237,7 @@
   font-size: 12px;
   letter-spacing: 0.36px;
   color: #3695D8;
+  font-family: inherit;
   opacity: 1;
 }
 
@@ -207,7 +246,22 @@
   font-size: 12px;
   letter-spacing: 0.36px;
   color: #000000;
+  font-family: inherit;
   opacity: 1;
 }
 
+.report {
+  color: #e73247 !important;
+  text-align: left;
+  font: normal normal 300 12px/18px Roboto;
+  letter-spacing: 0.36px;ß
+  opacity: 1;
+  background: transparent;
+  border: 1px solid #e37247 !important;
+  padding: 1px 5px !important;
+  border-radius: 4px !important;
+}
 
+.btn:hover {
+  background: transparent !important;
+}
