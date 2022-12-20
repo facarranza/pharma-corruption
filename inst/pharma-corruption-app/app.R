@@ -204,13 +204,15 @@ server <- function(input, output, session) {
       map_zoom_delta = 0.25,
       map_tiles = "OpenStreetMap",
       legend_position = "bottomleft",
-      border_weight = 0.3
+      border_weight = 0.3,
+      format_sample_num = "1,234."
     )
     if (actual_but$active == "map_bubbles") {
       opts$legend_show <- FALSE
       opts$map_min_size <- 2
       opts$map_max_size <- 3
       opts$na_color <- "transparent"
+      opts$tooltip <- "<b>Total: </b>{Total}"
     }
     if (actual_but$active == "map") {
       opts$na_color <- "transparent"
