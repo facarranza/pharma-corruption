@@ -29,10 +29,11 @@ id_published_at:
     endLabel: To
 id_corruption_case_study:
   show: true
-  input_type: checkboxGroupInput
+  input_type: radioButtons
   input_params:
     label: study_label()
     choices:
+      - 'All'
       - 'Yes'
       - 'No'
     inline: TRUE
