@@ -9,6 +9,7 @@ library(shinypanels)
 
 ui <- panelsPage(
   includeCSS("www/custom.css"),
+  includeScript("www/handlers.js"),
   panel(title = "Filters",
         id = "pharma-panel",
         can_collapse = TRUE,
@@ -94,12 +95,17 @@ server <- function(input, output, session) {
   })
   title_holder <- reactive({
     #HTML("<i class='icon-search'></i>")
-    "Search"
+    "Search Titles"
   })
 
   countries_opts <- reactive({
-    unique(c("All", data_pharma$`Country/Region`)) |>
+    req(actual_but$active)
+    cp <- unique(c("All", data_pharma$`Country/Region`)) |>
       setdiff("NA")
+    if (actual_but$active %in% c("map_bubbles", "map")) {
+      cp <- setdiff(cp, "No Location")
+    }
+    cp
   })
 
   range_dates <- reactive({
@@ -225,15 +231,14 @@ server <- function(input, output, session) {
     )
     if (actual_but$active == "map_bubbles") {
       opts$legend_show <- FALSE
-      opts$map_min_size <- 2
-      opts$map_max_size <- 3
+      opts$map_min_size <- 3
+      opts$map_max_size <- 5
       opts$na_color <- "transparent"
       opts$tooltip <- "<b>Total: </b>{Total}"
     }
     if (actual_but$active == "map") {
       opts$na_color <- "transparent"
-      opts$palette_colors <- rev(c("#ef4e00", "#f66a02", "#fb8412", "#fd9d29",
-                                            "#ffb446", "#ffca6b", "#ffdf98"))
+      opts$palette_colors <- c("#FFF6FF", "#da3592")
     } else {
       opts$clickFunction <- htmlwidgets::JS(myFunc)
       opts$palette_colors <- "#ef4e00"
@@ -278,44 +283,49 @@ server <- function(input, output, session) {
       leaflet::setView(lng = 0, lat = -5, 1.25)
   })
 
-  output$dt_viz <- DT::renderDataTable({
+  output$dt_viz <- reactable::renderReactable({
     req(actual_but$active)
     if (actual_but$active != "table") return()
     req(data_down())
     df <- data_down()
-    dtable <- DT::datatable(df,
-                            rownames = F,
-                            selection = 'none',
-                            options = list(
-                              scrollX = T,
-                              fixedColumns = TRUE,
-                              fixedHeader = TRUE,
-                              scrollY = "500px"
-                            ))
-
+    dtable <- reactable::reactable(df,
+                                   defaultPageSize = 5,
+                                   searchable = TRUE,
+                                   showPageSizeOptions = TRUE,
+                                    width = 900, height = 700)
     dtable
   })
 
   output$viz_view <- renderUI({
     req(actual_but$active)
+
+    heigh_viz <- 600
+    width_viz <- 500
+    if (!is.null(input$dimension)) {
+      heigh_viz <- input$dimension[2] - 150
+      width_viz <- input$dimension[1] - 600
+    }
+
     if (actual_but$active != "table") {
-      if (is.null(data_viz())) return("No information available")
+      if (is.null(data_viz())) return(
+        HTML("Unfortunately, there are no search results for your requested filters.<br/>
+             Please try again with different filters"))
     }
 
     viz <- actual_but$active
     if (viz %in% c("map", "map_bubbles")) {
       shinycustomloader::withLoader(
-        leaflet::leafletOutput("lflt_viz", height = 600),
+        leaflet::leafletOutput("lflt_viz", height = heigh_viz),
         type = "html", loader = "loader4"
       )
     } else if (viz == "table") {
       shinycustomloader::withLoader(
-        DT::dataTableOutput("dt_viz", height = 600, width = 600 ),
+        reactable::reactableOutput("dt_viz", height = heigh_viz, width = width_viz),
         type = "html", loader = "loader4"
       )
     } else {
       #shinycustomloader::withLoader(
-      highcharter::highchartOutput("hgch_viz", height = 600)#,
+      highcharter::highchartOutput("hgch_viz", height = heigh_viz)#,
       #   type = "html", loader = "loader4"
       # )
     }
@@ -378,8 +388,12 @@ server <- function(input, output, session) {
                <img src='img/click/click.svg' class = 'click-img'/><br/>
                <b>Click</b> on the visualization to see more information.")
     if (is.null(click_viz$info)) return(tx)
-    if (is.null(data_viz())) return("No information available")
-    if (nrow(data_viz()) == 0) return("No information available")
+    if (is.null(data_viz()))  return(HTML("Unfortunately, there are no search results for your requested filters.<br/>
+             Please try again with different filters"))
+
+    if (nrow(data_viz()) == 0) return( HTML("Unfortunately, there are no search results for your requested filters.<br/>
+             Please try again with different filters"))
+
     tx <- write_html(data = data_down(),
                      dic = dic_pharma,
                      click = click_viz$info,

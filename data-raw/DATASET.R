@@ -14,6 +14,22 @@ data_pharma$`Published-at` <- lubridate::as_date(
   lubridate::ymd_hms(data_pharma$`Published Date`))
 data_pharma$`Corruption Case Study`[data_pharma$`Corruption Case Study`] <- "Yes"
 data_pharma$`Corruption Case Study`[is.na(data_pharma$`Corruption Case Study`)] <- "No"
+data_pharma <- data_pharma |>
+  rename( URL = url,
+          `Media type` = `media-type`,
+          `Source` = `Source Name`,
+          `English title` = `Title`,
+          `Publication year` = `Year`,
+          `Publication date` = `Published Date`,
+          `Country / region` = `Country/Region`,
+          `Corruption case study` = `Corruption Case Study`,
+          `Associated topic` = `topics`,
+          `Links to similar articles` = `Similar Stories Links`,
+          `Titles of similar articles`= `Similar Stories Titles`,
+          `Corruption categories` = `Corruption Categories`,
+          `Health categories` = `Health Categories`)
+
+
 
 # create dic --------------------------------------------------------------
 
