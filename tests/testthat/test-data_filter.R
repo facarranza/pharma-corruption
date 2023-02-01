@@ -6,7 +6,7 @@ test_that("filter data", {
                              dic = dic_pharma,
                              var_inputs = test_list)
   data_expect <- data_pharma |>
-    dplyr::filter(`Country/Region` %in% "Burundi")
+    dplyr::filter(`Country / region` %in% "Burundi")
   expect_equal(data_result, data_expect)
 
 
@@ -17,7 +17,7 @@ test_that("filter data", {
                              dic = dic_pharma,
                              var_inputs = test_list)
   data_expect <- data_pharma |>
-    dplyr::filter(`Country/Region` %in% c("United States", "Mexico", "Brazil"),
+    dplyr::filter(`Country / region` %in% c("United States", "Mexico", "Brazil"),
                   `Published-at` >= "2021-10-26" &
                   `Published-at` <= "2022-10-29")
   expect_equal(data_result, data_expect)
@@ -32,12 +32,12 @@ test_that("filter data", {
                              dic = dic_pharma,
                              var_inputs = test_list,
                              .id = "story-id")
-  result_health <- strsplit(data_result$`Health Categories`, split = ",") |>
+  result_health <- strsplit(data_result$`Health categories`, split = ",") |>
     unlist() |>
     unique()
 
   expect_equal(result_health, hope_health)
-  expect_equal(unique(data_result$`Corruption Categories`), hope_corruption)
+  expect_equal(unique(data_result$`Corruption categories`), hope_corruption)
 
   # filter numeric var
   test_list <- list("id_location_lat" = 43.16,

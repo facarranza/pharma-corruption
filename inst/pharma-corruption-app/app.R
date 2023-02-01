@@ -91,7 +91,7 @@ server <- function(input, output, session) {
   # Options to parmesan -----------------------------------------------------
 
   title_opts <- reactive({
-    unique(data_pharma$Title)
+    unique(data_pharma$`English title`)
   })
   title_holder <- reactive({
     #HTML("<i class='icon-search'></i>")
@@ -100,7 +100,7 @@ server <- function(input, output, session) {
 
   countries_opts <- reactive({
     req(actual_but$active)
-    cp <- unique(c("All", data_pharma$`Country/Region`)) |>
+    cp <- unique(c("All", data_pharma$`Country / region`)) |>
       setdiff("NA")
     if (actual_but$active %in% c("map_bubbles", "map")) {
       cp <- setdiff(cp, "No Location")
@@ -126,14 +126,14 @@ server <- function(input, output, session) {
   })
 
   health_opts <- reactive({
-    strsplit(c("All", data_pharma$`Health Categories`), split = ",") |>
+    strsplit(c("All", data_pharma$`Health categories`), split = ",") |>
       unlist() |>
       unique() |>
       setdiff("NA")
   })
 
   corruption_opts <- reactive({
-    strsplit(c("All", data_pharma$`Corruption Categories`), split = ",") |>
+    strsplit(c("All", data_pharma$`Corruption categories`), split = ",") |>
       unlist() |>
       unique() |>
       setdiff("NA")
@@ -155,8 +155,8 @@ server <- function(input, output, session) {
   # updates all -------------------------------------------------------------
 
   observe({
-    if ("All" %in% input$id_country_region) {
-      updateSelectizeInput(session, inputId = "id_country_region", selected = "All")
+    if ("All" %in% input$id_country___region) {
+      updateSelectizeInput(session, inputId = "id_country___region", selected = "All")
     }
     if ("All" %in% input$id_health_categories) {
       updateSelectizeInput(session, inputId = "id_health_categories", selected = "All")
@@ -177,6 +177,7 @@ server <- function(input, output, session) {
                       var_inputs = ls,
                       .id = "story-id") |>
       dplyr::select(-`Other Articles`, -entityname)
+
     df
   })
 
@@ -189,9 +190,19 @@ server <- function(input, output, session) {
     if (actual_but$active == "table") return()
     req(data_down())
     if (nrow(data_down()) == 0) return()
-    data_down() |>
-      variable_selection(viz = actual_but$active) |>
-      var_aggregation(dic_pharma, Total = dplyr::n())
+
+    dv <- data_down() |>
+      variable_selection(viz = actual_but$active)
+    if (actual_but$active %in% c("bar", "treemap")) {
+      id_r <- input$id_country___region
+      if (is.null(id_r)) id_r <- "All"
+      if (any(grepl("All", id_r))) {
+        dv <- dv |> dplyr::select(-`Country / region`)
+      }
+    }
+
+    dv |> var_aggregation(dic_pharma, Total = dplyr::n())
+
   })
 
 
@@ -202,15 +213,26 @@ server <- function(input, output, session) {
     req(actual_but$active)
 
     myFunc <- NULL
-    if (actual_but$active %in% c("bar", "treemap")) {
-      myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {id:event.point.name, timestamp: new Date().getTime()});}")
-    }
-    if (actual_but$active %in% c("line")) {
+    dv <- dplyr::as_tibble(data_viz())
+    if (actual_but$active %in% c("line", "bar")) {
       myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {cat:this.name, id:event.point.category, timestamp: new Date().getTime()});}")
     }
+    if (actual_but$active %in% c("treemap")) {
+      myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {cat:event.point.node, id:event.point.name, timestamp: new Date().getTime()});}")
+    }
+    if (actual_but$active %in% c("bar", "treemap")) {
+      dv[[1]][dv[[1]] == "NA"] <- NA
+      if (ncol(data_viz()) == 2) {
+        myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {id:event.point.name, timestamp: new Date().getTime()});}")
+      }
+      if (ncol(dv) == 3) {
+        dv[[2]][dv[[2]] == "NA"] <- NA
+      }
+    }
+
 
     opts <- list(
-      data = data_viz(),
+      data = dv,
       orientation = "hor",
       ver_title = " ",
       hor_title = " ",
@@ -227,26 +249,31 @@ server <- function(input, output, session) {
       map_tiles = "OpenStreetMap",
       legend_position = "bottomleft",
       border_weight = 0.3,
-      format_sample_num = "1,234."
+      format_sample_num = "1,234.",
+      drop_na = TRUE
     )
+
+    if (actual_but$active == "map") {
+      opts$na_color <- "transparent"
+      opts$palette_colors <- c("#FFF6FF", "#da3592")
+    } else {
+      opts$clickFunction <- htmlwidgets::JS(myFunc)
+      opts$palette_colors <- c("#ef4e00", "#ffe700", "#6fcbff", "#62ce00",
+                                        "#ffeea8", "#da3592","#0000ff")
+                                        if (actual_but$active == "line") {
+                                          opts$marker_enabled <- FALSE
+                                          # opts$palette_colors <- c("#ef4e00", "#ffe700", "#6fcbff", "#62ce00",
+                                          #                                   "#ffeea8", "#da3592","#0000ff")
+                                        }
+    }
+
     if (actual_but$active == "map_bubbles") {
       opts$legend_show <- FALSE
       opts$map_min_size <- 3
       opts$map_max_size <- 5
       opts$na_color <- "transparent"
       opts$tooltip <- "<b>Total: </b>{Total}"
-    }
-    if (actual_but$active == "map") {
-      opts$na_color <- "transparent"
-      opts$palette_colors <- c("#FFF6FF", "#da3592")
-    } else {
-      opts$clickFunction <- htmlwidgets::JS(myFunc)
       opts$palette_colors <- "#ef4e00"
-        if (actual_but$active == "line") {
-          opts$marker_enabled <- FALSE
-          opts$palette_colors <- c("#ef4e00", "#ffe700", "#6fcbff", "#62ce00",
-                                            "#ffeea8", "#da3592","#0000ff")
-        }
     }
 
     if (actual_but$active == "treemap") {
@@ -283,16 +310,25 @@ server <- function(input, output, session) {
       leaflet::setView(lng = 0, lat = -5, 1.25)
   })
 
-  output$dt_viz <- reactable::renderReactable({
+  output$dt_viz <- DT::renderDataTable({
     req(actual_but$active)
     if (actual_but$active != "table") return()
     req(data_down())
     df <- data_down()
-    dtable <- reactable::reactable(df,
-                                   defaultPageSize = 5,
-                                   searchable = TRUE,
-                                   showPageSizeOptions = TRUE,
-                                    width = 900, height = 700)
+    df <- dplyr::as_tibble(data_down())
+    dtable <- DT::datatable(df,
+                            rownames = F,
+                            selection = 'none',
+                            options = list(
+                              scrollX = T,
+                              fixedColumns = TRUE,
+                              fixedHeader = TRUE,
+                              autoWidth = TRUE,
+                              scrollY = "500px",
+                              columnDefs = list(list(width = '200px', targets = c("URL")),
+                                                list(width = '500px', targets = c("Links to similar articles")),
+                                                list(width = '500px', targets = c("Titles of similar articles")))
+                            ))
     dtable
   })
 
@@ -320,7 +356,7 @@ server <- function(input, output, session) {
       )
     } else if (viz == "table") {
       shinycustomloader::withLoader(
-        reactable::reactableOutput("dt_viz", height = heigh_viz, width = width_viz),
+        DT::dataTableOutput("dt_viz", height = heigh_viz, width = width_viz),
         type = "html", loader = "loader4"
       )
     } else {
@@ -341,28 +377,29 @@ server <- function(input, output, session) {
     if (!"location.lat" %in% names(data_viz())) return()
     req(actual_but$active)
     if (actual_but$active != "map_bubbles") return()
-      click <- input$lflt_viz_marker_click
-      if (!is.null(click)) {
-        click_viz$info <- list("id_location_lat" = click$lat,
-                               "id_location_lon" = click$lng)
-      }
+    click <- input$lflt_viz_marker_click
+    if (!is.null(click)) {
+      click_viz$info <- list("id_location_lat" = click$lat,
+                             "id_location_lon" = click$lng)
+    }
 
   })
 
   observeEvent(input$lflt_viz_shape_click, {
     if (is.null(data_viz())) return()
-    if (!"Country/Region" %in% names(data_viz())) return()
+    if (!"Country / region" %in% names(data_viz())) return()
     req(actual_but$active)
     if (actual_but$active != "map") return()
     click <- input$lflt_viz_shape_click
     if (!is.null(click)) {
-      click_viz$info <- list("id_country_region" = click$id)
+      click_viz$info <- list("id_country___region" = click$id)
     }
 
   })
 
   observeEvent(input$hcClicked, {
     if (is.null(data_viz())) return()
+
     if (actual_but$active == "line") {
       if (!"Published-at" %in% names(data_viz())) return()
       click <- input$hcClicked
@@ -372,11 +409,18 @@ server <- function(input, output, session) {
       }
     }
     if (actual_but$active %in% c("bar", "treemap")) {
-      if (!"Corruption Categories" %in% names(data_viz())) return()
+      if (!"Corruption categories" %in% names(data_viz())) return()
       click <- input$hcClicked
+
       if (!is.null(click)) {
         click_viz$info <- list("id_corruption_categories" = click$id)
+        if ("Country / region" %in% names(data_viz())) {
+          click_viz$info <- list("id_corruption_categories" = click$id,
+                                 "id_country___region" = click$cat)
+        }
       }
+
+
     }
   })
 
@@ -400,12 +444,12 @@ server <- function(input, output, session) {
                      class_title = "click-title",
                      class_body = "click-text",
                      id = "story-id",
-                     "Title",
-                     "Country/Region",
+                     "English title",
+                     "Country / region",
                      "Published-at",
-                     "Health Categories",
-                     "Corruption Categories",
-                     "url")
+                     "Health categories",
+                     "Corruption categories",
+                     "URL")
     tx
   })
 

@@ -5,7 +5,7 @@ id_title:
   input_params:
     data: title_opts()
     placeholder: title_holder()
-id_country_region:
+id_country___region:
   show: true
   input_type: selectizeInput
   input_params:

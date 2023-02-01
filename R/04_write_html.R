@@ -29,7 +29,7 @@ write_html <- function(data, dic, click, class_title, class_body, id = NULL, ...
 
                       tx <- paste0("<div class = 'click-p'><div class = 'click-tl'>", v, ":</div> <div class = 'click-subtitle'>",
                                    df[[v]], "</div></div>", collapse = "")
-                      if (v == "url") {
+                      if (any( grepl("url|URL", v))) {
                         tx <- paste0("<div style='display:flex;justify-content: space-between;'><div>",
                                      paste0("<a href=", df[[v]]," target='_blank'>Link &#8734;</a>"),
                                      "</div>

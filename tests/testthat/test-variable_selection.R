@@ -9,7 +9,7 @@ test_that("Variable selection", {
 
   # With viz
   data_result <- variable_selection(data = data_pharma, viz = "map")
-  expect_equal(names(data_result), "Country/Region")
+  expect_equal(names(data_result), "Country / region")
 
   data_result <- variable_selection(data = data_pharma, viz = "map_bubbles")
   expect_equal(names(data_result), c("location.lon", "location.lat"))

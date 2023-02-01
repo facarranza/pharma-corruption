@@ -36,9 +36,9 @@ test_that("filter variables with multiple cats in same rows", {
   var_expect <- c("Health Technology", "Medical/Clinical Trials")
   data_result <- filter_list(data = data_pharma,
                              cats = var_expect,
-                              by = "Health Categories",
+                              by = "Health categories",
                              .id = "story-id")
-  result <- strsplit(data_result$`Health Categories`, split = ",") |>
+  result <- strsplit(data_result$`Health categories`, split = ",") |>
     unlist() |>
     unique()
   expect_equal(result, var_expect)

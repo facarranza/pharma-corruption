@@ -15,10 +15,10 @@ server <- function(input, output) {
                class_title = "click-title",
                class_body = "click-text",
                "Title",
-               "Country/Region",
+               "Country / region",
                "Published-at",
-               "Health Categories",
-               "Corruption Categories",
+               "Health categories",
+               "Corruption categories",
                "url")
   })
 

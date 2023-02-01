@@ -2,7 +2,7 @@ filtros:
   label:
   inputs:
     - id_title
-    - id_country_region
+    - id_country___region
     - id_published_at
     - id_health_categories
     - id_corruption_categories
