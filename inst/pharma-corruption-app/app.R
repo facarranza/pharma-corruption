@@ -316,18 +316,21 @@ server <- function(input, output, session) {
     req(data_down())
     df <- data_down()
     df <- dplyr::as_tibble(data_down())
+    df$URL <- paste0("<a href='",df$URL,"'  target='_blank'>","link to view","</a>")
+    df$`Links to similar articles` <- paste0("<a href='", df$`Links to similar articles`, "'  target='_blank'>","link to view","</a>")
     dtable <- DT::datatable(df,
                             rownames = F,
                             selection = 'none',
+                            escape = FALSE,
                             options = list(
                               scrollX = T,
                               fixedColumns = TRUE,
                               fixedHeader = TRUE,
                               autoWidth = TRUE,
                               scrollY = "500px",
-                              columnDefs = list(list(width = '200px', targets = c("URL")),
-                                                list(width = '500px', targets = c("Links to similar articles")),
-                                                list(width = '500px', targets = c("Titles of similar articles")))
+                              columnDefs = list(#list(width = '200px', targets = c("URL")),
+                                                #list(width = '500px', targets = c("Links to similar articles")),
+                                                list(width = '700px', targets = c("Titles of similar articles")))
                             ))
     dtable
   })
@@ -355,10 +358,10 @@ server <- function(input, output, session) {
         type = "html", loader = "loader4"
       )
     } else if (viz == "table") {
-      shinycustomloader::withLoader(
-        DT::dataTableOutput("dt_viz", height = heigh_viz, width = width_viz),
-        type = "html", loader = "loader4"
-      )
+      #shinycustomloader::withLoader(
+        DT::dataTableOutput("dt_viz", height = heigh_viz, width = width_viz)#,
+       # type = "html", loader = "loader4"
+      #)
     } else {
       #shinycustomloader::withLoader(
       highcharter::highchartOutput("hgch_viz", height = heigh_viz)#,
