@@ -15,6 +15,9 @@ p {
   font-family: inherit;
 }
 
+.load-container {
+  z-index: auto !important;
+}
 /* STYLES HEAD */
 .top-chardonnay {
   border-top: 1.5px solid #3695d8;
