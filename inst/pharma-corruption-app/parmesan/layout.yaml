@@ -1,7 +1,7 @@
 filtros:
   label:
   inputs:
-    - id_title
+    - id_english_title
     - id_country___region
     - id_published_at
     - id_health_categories
