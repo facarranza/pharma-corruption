@@ -127,8 +127,15 @@ server <- function(input, output, session) {
 
 
   range_dates <- reactive({
-    c(min(data_pharma$`Published-at`, na.rm = TRUE),
-      max(data_pharma$`Published-at`, na.rm = TRUE))
+    req(data_titles())
+    df <- data_titles()
+    if (!is.null(input$id_country___region)) {
+      if (!any(input$id_country___region %in% c("All", ""))) {
+        df <- df |> dplyr::filter(`Country / region` %in% input$id_country___region)
+      }
+    }
+    c(min(df$`Published-at`, na.rm = TRUE),
+      max(df$`Published-at`, na.rm = TRUE))
   })
   min_date <- reactive({
     req(range_dates())
@@ -144,14 +151,28 @@ server <- function(input, output, session) {
   })
 
   health_opts <- reactive({
-    strsplit(c("All", data_pharma$`Health categories`), split = ",") |>
+    req(data_titles())
+    df <- data_titles()
+    if (!is.null(input$id_country___region)) {
+      if (!any(input$id_country___region %in% c("All", ""))) {
+        df <- df |> dplyr::filter(`Country / region` %in% input$id_country___region)
+      }
+    }
+    strsplit(c("All", df$`Health categories`), split = ",") |>
       unlist() |>
       unique() |>
       setdiff("NA")
   })
 
   corruption_opts <- reactive({
-    strsplit(c("All", data_pharma$`Corruption categories`), split = ",") |>
+    req(data_titles())
+    df <- data_titles()
+    if (!is.null(input$id_country___region)) {
+      if (!any(input$id_country___region %in% c("All", ""))) {
+        df <- df |> dplyr::filter(`Country / region` %in% input$id_country___region)
+      }
+    }
+    strsplit(c("All", df$`Corruption categories`), split = ",") |>
       unlist() |>
       unique() |>
       setdiff("NA")
@@ -264,9 +285,9 @@ server <- function(input, output, session) {
     if (actual_but$active %in% c("map_bubbles")) {
       if (all(is.na(dv[[1]]))) dv <- NULL
     }
-    # if (actual_but$active %in% c("map")) {
-    #   if (unique(dv[[1]]) == "No Location") dv <- NULL
-    # }
+    if (actual_but$active %in% c("map")) {
+      if (unique(dv[[1]])[1] == "No Location") dv <- NULL
+    }
 
     #print(unique(dv$`Country / region`))
 
