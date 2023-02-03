@@ -8,7 +8,9 @@ library(purrr)
 
 
 # read data ---------------------------------------------------------------
-
+googledrive::drive_deauth()
+googledrive::drive_download("https://drive.google.com/file/d/1pGGRJV9RH3yBeG4qXdNBL64HsxELd47B/view",
+                                         path = "data-raw/data/aimon.json", overwrite = TRUE)
 data_pharma <- stream_in(file("data-raw/data/aimon.json"))
 data_pharma$`Published-at` <- lubridate::as_date(
   lubridate::ymd_hms(data_pharma$`Published Date`))

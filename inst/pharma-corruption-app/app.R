@@ -233,6 +233,9 @@ server <- function(input, output, session) {
     myFunc <- NULL
     dv <- dplyr::as_tibble(data_viz())
 
+    verLabel <- names(dv)[2]
+    horLabel <- names(dv)[1]
+
     if (actual_but$active %in% c("line", "bar")) {
       myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {cat:this.name, id:event.point.category, timestamp: new Date().getTime()});}")
     }
@@ -242,27 +245,36 @@ server <- function(input, output, session) {
     if (actual_but$active %in% c("bar", "treemap")) {
       dv[[1]][dv[[1]] == "NA"] <- NA
       if (ncol(data_viz()) == 2) {
+        verLabel <- names(dv)[1]
+        horLabel <- names(dv)[2]
         myFunc <- paste0("function(event) {Shiny.onInputChange('", 'hcClicked', "', {id:event.point.name, timestamp: new Date().getTime()});}")
       }
       if (ncol(dv) == 3) {
+        verLabel <- names(dv)[2]
+        horLabel <- names(dv)[3]
         dv[[2]][dv[[2]] == "NA"] <- NA
       }
+    }
+
+    if (actual_but$active %in% c("line")) {
+      verLabel <- names(dv)[2]
+      horLabel <- names(dv)[3]
     }
 
     if (actual_but$active %in% c("map_bubbles")) {
       if (all(is.na(dv[[1]]))) dv <- NULL
     }
-    if (actual_but$active %in% c("map")) {
-      if (unique(dv[[1]]) == "No Location") dv <- NULL
-    }
+    # if (actual_but$active %in% c("map")) {
+    #   if (unique(dv[[1]]) == "No Location") dv <- NULL
+    # }
 
     #print(unique(dv$`Country / region`))
 
     opts <- list(
       data = dv,
       orientation = "hor",
-      ver_title = " ",
-      hor_title = " ",
+      ver_title = verLabel,
+      hor_title = horLabel,
       label_wrap_legend = 100,
       label_wrap = 40,
       background_color = "#ffffff",
@@ -273,14 +285,13 @@ server <- function(input, output, session) {
       cursor = "pointer",
       map_zoom_snap = 0.25,
       map_zoom_delta = 0.25,
-      map_tiles = "OpenStreetMap",
       legend_position = "bottomleft",
       border_weight = 0.3,
       format_sample_num = "1,234.",
-      drop_na = TRUE#,
-      #map_provider_tile = "url",
-      #map_extra_layout = "https://maps.geoapify.com/v1/tile/positron/{z}/{x}/{y}.png?&apiKey=f39345000acd4188aae1f2f4eed3ff14",
-      #map_name_layout = "positron"
+      drop_na = TRUE,
+      map_provider_tile = "url",
+      map_extra_layout = "https://maps.geoapify.com/v1/tile/osm-bright-smooth/{z}/{x}/{y}.png?apiKey=3ccf9d5f19894b32b502485362c99163",
+      map_name_layout = "osm-brigh"
 
     )
 
@@ -338,7 +349,7 @@ server <- function(input, output, session) {
     req(data_viz())
     if (!actual_but$active %in% c("map", "map_bubbles")) return()
     viz_down() |>
-      leaflet::setView(lng = 0, lat = -5, 1.25)
+      leaflet::setView(lng = 0, lat = -5, 1.3)
   })
 
   output$dt_viz <- DT::renderDataTable({
