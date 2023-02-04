@@ -1,4 +1,4 @@
-webshot::install_phantomjs(force = FALSE)
+webshot::install_phantomjs(force = T)
 library(dsmodules)
 library(hgchmagic)
 library(lfltmagic)
