@@ -20,12 +20,6 @@ jobs:
           sudo apt install -y libcurl4-openssl-dev libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libssl-dev libmagick++-dev libv8-dev  libnode-dev libudunits2-dev libgdal-dev libprotobuf-dev libjq-dev protobuf-compiler libprotobuf-dev libprotoc-dev libpoppler-cpp-dev libarchive-dev
           Rscript -e "install.packages('usethis', dependencies=TRUE)"
           Rscript -e "install.packages('rsconnect',dependencies=TRUE)"
-      - name: Execute Directory
-        run: |
-          pwd
-          cd R
-          pwd
-
       - name: Deploy to shinyapps.io
         # Continuous deployment only for pushes to the main / master branch
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
