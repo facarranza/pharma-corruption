@@ -1,7 +1,7 @@
 name: update_datos_cron_v1_git
 on:
   schedule:
-  - cron: 0 1 * * *
+  - cron: 0 2 * * *
 jobs:
   build_and_deploy:
     runs-on: ubuntu-20.04
