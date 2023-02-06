@@ -68,7 +68,7 @@ unlist_pharma <- map(var_list, function (by) {
 data_pharma <- data_pharma[-grep(paste0(var_list, collapse = "|"),
                                  names(data_pharma))]
 
-data_pharma <- data_pharma |> left_join(unlist_pharma)
+data_pharma <- data_pharma |> left_join(unlist_pharma) |> top(10)
 
 
 # save data and dic -------------------------------------------------------
