@@ -21,6 +21,8 @@ Suggests:
     lfltmagic,
     testthat (>= 3.0.0)
 Remotes: 
+    datasketch/dstools,
+    datasketch/dsmodules,
     datasketch/hgchmagic,
     datasketch/lfltmagic
 Config/testthat/edition: 3
