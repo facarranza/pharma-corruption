@@ -21,7 +21,7 @@ jobs:
           Rscript -e "install.packages('usethis', dependencies=TRUE)"
           Rscript -e "install.packages('rsconnect',dependencies=TRUE)"
       - name: Execute Directory
-       run: |
+        run: |
           pwd
           cd inst/pharma-corruption-app
           pwd
