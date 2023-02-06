@@ -10,7 +10,7 @@ License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
 Depends: 
     R (>= 2.10)
 Imports: 
-    dplyr (= 1.0.9),
+    dplyr (== 1.0.9),
     htmltools,
     purrr,
     tidyr,
