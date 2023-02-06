@@ -16,10 +16,10 @@ jobs:
         run: |
           sudo apt install -y libcurl4-openssl-dev libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libssl-dev libmagick++-dev libv8-dev  libnode-dev libudunits2-dev libgdal-dev libprotobuf-dev libjq-dev protobuf-compiler libprotobuf-dev libprotoc-dev libpoppler-cpp-dev libarchive-dev
           Rscript -e "install.packages('usethis', dependencies=TRUE)"
-          Rscript -e "install.packages('dplyr')"
-          Rscript -e "install.packages('tidyr')"
-          Rscript -e "install.packages('jsonlite')"
-          Rscript -e "install.packages('purr')"
+          Rscript -e "install.packages('dplyr', dependencies=TRUE)"
+          Rscript -e "install.packages('tidyr', dependencies=TRUE)"
+          Rscript -e "install.packages('jsonlite', dependencies=TRUE)"
+          Rscript -e "install.packages('purr', dependencies=TRUE)"
           Rscript "data-raw/DATASET.R"
       - name: Commit files
         run: |
