@@ -15,7 +15,11 @@ Imports:
     purrr,
     tidyr,
     yaml
-Suggests: 
+Suggests:
+    makeup,
+    homodatum,
+    dstools,
+    dsmodules,
     data.table,
     hgchmagic,
     lfltmagic,
