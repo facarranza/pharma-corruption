@@ -14,7 +14,7 @@ RoxygenNote: 7.2.3
 Depends: 
     R (>= 2.10)
 Imports:
-    dplyr (== 1.0.9),
+    dplyr,
     htmltools,
     purrr,
     tidyr,
@@ -29,7 +29,6 @@ Suggests:
     lfltmagic,
     testthat (>= 3.0.0)
 Remotes:
-    github::tidyverse/dplyr@v1.0.9,
     datasketch/makeup,
     datasketch/homodatum,
     datasketch/dstools,
