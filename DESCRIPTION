@@ -24,15 +24,14 @@ Suggests:
     hgchmagic,
     lfltmagic,
     testthat (>= 3.0.0)
-Remotes: 
+Remotes:
+    tidyverse/dplyr@v1.0.9,
     datasketch/makeup,
     datasketch/homodatum,
     datasketch/dstools,
     datasketch/dsmodules,
     datasketch/hgchmagic,
-    datasketch/lfltmagic,
-    tidyverse/dplyr@v1.0.9
-Config/testthat/edition: 3
+    datasketch/lfltmagic
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
