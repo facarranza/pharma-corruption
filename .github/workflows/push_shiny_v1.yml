@@ -26,7 +26,8 @@ jobs:
           Rscript -e "install.packages('usethis', dependencies=TRUE)"
           Rscript -e "install.packages('rsconnect',dependencies=TRUE)"
           Rscript -e "install.packages('devtools',dependencies=TRUE)"
-          Rscript -e 'devtools::install_github("facarranza/pharma-corruption")'
+          Rscript -e "devtools::install_github('facarranza/pharma-corruption')"
+
       - name: Execute Directory
         run: |
           pwd
