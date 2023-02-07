@@ -29,7 +29,9 @@ Suggests:
     hgchmagic,
     lfltmagic,
     testthat (>= 3.0.0),
-    webshot2
+    webshot2,
+    shinypanels,
+    shinycustomloader
 Remotes:
     datasketch/parmesan,
     datasketch/makeup,
@@ -37,4 +39,6 @@ Remotes:
     datasketch/dstools,
     datasketch/dsmodules,
     datasketch/hgchmagic,
-    datasketch/lfltmagic
+    datasketch/lfltmagic,
+    datasketch/shinypanels,
+    emitanaka/shinycustomloader
