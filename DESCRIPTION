@@ -13,8 +13,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Depends: 
     R (>= 2.10),
-    dplyr (==1.0.9)
+    
 Imports:
+    dplyr (<= 1.0.9),
     htmltools,
     purrr,
     tidyr,
@@ -29,7 +30,7 @@ Suggests:
     lfltmagic,
     testthat (>= 3.0.0)
 Remotes:
-    tidyverse/dplyr (==1.0.9),
+    tidyverse/dplyr (== 1.0.9),
     datasketch/makeup,
     datasketch/homodatum,
     datasketch/dstools,

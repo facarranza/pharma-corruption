@@ -21,6 +21,7 @@ jobs:
       - name: Execute Script
         run: |
           Rscript -e "install.packages('packageVersion', dependencies=TRUE)"
+          Rscript -e "print('dplyr version')"
           Rscript -e "packageVersion('dplyr')"
           Rscript -e "install.packages('usethis', dependencies=TRUE)"
           Rscript -e "install.packages('rsconnect',dependencies=TRUE)"
