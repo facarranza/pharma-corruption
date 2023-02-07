@@ -8,8 +8,8 @@ rsconnect::setAccountInfo(name = Sys.getenv("SHINYAPPS_ACCOUNT"),
                           secret = Sys.getenv("SHINYAPPS_SECRET"))
 rsconnect::deployApp(
   appDir = "R/",
-  appName = "OrcaOperativos",
-  appTitle = "OrcaOperativos",
+  appName = "OrcaOperatis",
+  appTitle = "OrcaOperatos",
   logLevel = "verbose",
   forceUpdate= TRUE
   # # exclude hidden files and renv directory (if present)
