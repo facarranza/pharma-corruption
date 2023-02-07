@@ -21,14 +21,17 @@ Imports:
     yaml
 Suggests:
     makeup,
+    parmesan,
     homodatum,
     dstools,
     dsmodules,
     data.table,
     hgchmagic,
     lfltmagic,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    webshot2
 Remotes:
+    datasketch/parmesan,
     datasketch/makeup,
     datasketch/homodatum,
     datasketch/dstools,
