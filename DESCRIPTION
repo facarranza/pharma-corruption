@@ -13,7 +13,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Depends: 
     R (>= 2.10),
-    dplyr
+    dplyr (==1.0.9)
 Imports:
     htmltools,
     purrr,
