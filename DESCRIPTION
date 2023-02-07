@@ -29,7 +29,7 @@ Suggests:
     lfltmagic,
     testthat (>= 3.0.0)
 Remotes:
-    tidyverse/dplyr@v1.0.9,
+    github::tidyverse/dplyr@v1.0.9,
     datasketch/makeup,
     datasketch/homodatum,
     datasketch/dstools,
