@@ -26,7 +26,7 @@ jobs:
           Rscript -e "packageVersion('dplyr')"
           Rscript -e "install.packages('usethis', dependencies=TRUE)"
           Rscript -e "install.packages('rsconnect',dependencies=TRUE)"
-          Rscript -e "devtools::install_github('facarranza/pharma-corruption')"
+          Rscript -e "devtools::install_github('facarranza/pharma-corruption', auth_token = NULL)"
 
       - name: Execute Directory
         run: |
