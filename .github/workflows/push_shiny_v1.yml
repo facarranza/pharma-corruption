@@ -25,7 +25,7 @@ jobs:
           Rscript -e "print('dplyr version')"
           Rscript -e "packageVersion('dplyr')"
           Rscript -e "install.packages('usethis', dependencies=TRUE)"
-          Rscript -e "install.packages('rsconnect',dependencies=TRUE)"}
+          Rscript -e "install.packages('rsconnect',dependencies=TRUE)"
           Rscript -e "install.packages('remotes',dependencies=TRUE)"
           Rscript -e "remotes::install_github('facarranza/pharma-corruption', auth_token = NULL)"
 
