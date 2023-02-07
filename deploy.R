@@ -6,8 +6,8 @@ rsconnect::setAccountInfo(name = Sys.getenv("SHINYAPPS_ACCOUNT"),
                           secret = Sys.getenv("SHINYAPPS_SECRET"))
 rsconnect::deployApp(
   appDir = "inst/pharma-corruption-app/",
-  appName = "pharma-corruption-testdp",
-  appTitle = "pharma-corruption-testdp",
+  appName = "pharma-corruption-app",
+  appTitle = "pharma-corruption-app",
   logLevel = "verbose",
   forceUpdate= TRUE
   # # exclude hidden files and renv directory (if present)
