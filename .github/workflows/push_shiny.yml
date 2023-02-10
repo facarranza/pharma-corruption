@@ -12,22 +12,32 @@ jobs:
         with:
           use-public-rspm: true
           r-version: '4.2.1'
+      - name: Execute Script
+        run: |
+          sudo apt install -y libcurl4-openssl-dev libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libssl-dev libmagick++-dev libv8-dev  libnode-dev libudunits2-dev libgdal-dev libprotobuf-dev libjq-dev protobuf-compiler libprotobuf-dev libprotoc-dev libpoppler-cpp-dev libarchive-dev
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           cache-version: 2
           extra-packages: |
-            any::pkgload, any::rcmdcheck, any::XML
+            any::pkgload, any::rcmdcheck
       - name: Execute Script
+        env:
+          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          sudo apt install -y libcurl4-openssl-dev libxml2-dev libfontconfig1-dev libharfbuzz-dev libfribidi-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libssl-dev libmagick++-dev libv8-dev  libnode-dev libudunits2-dev libgdal-dev libprotobuf-dev libjq-dev protobuf-compiler libprotobuf-dev libprotoc-dev libpoppler-cpp-dev libarchive-dev
+          Rscript -e "install.packages('devtools',dependencies=TRUE)"
+          Rscript -e "install.packages('packageVersion', dependencies=TRUE)"
+          Rscript -e "print('dplyr version')"
+          Rscript -e "packageVersion('dplyr')"
           Rscript -e "install.packages('usethis', dependencies=TRUE)"
-          Rscript -e "install.packages('rsconnect', dependencies=TRUE)"
+          Rscript -e "install.packages('rsconnect',dependencies=TRUE)"
+          Rscript -e "install.packages('remotes',dependencies=TRUE)"
+          Rscript -e "remotes::install_github('facarranza/pharma-corruption', auth_token = NULL)"
+
       - name: Execute Directory
         run: |
           pwd
-          cd R
+          cd inst/pharma-corruption-app
           pwd
-
       - name: Deploy to shinyapps.io
         # Continuous deployment only for pushes to the main / master branch
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
@@ -35,4 +45,4 @@ jobs:
           SHINYAPPS_ACCOUNT: ${{ secrets.SHINYAPPS_ACCOUNT }}
           SHINYAPPS_TOKEN: ${{ secrets.SHINYAPPS_TOKEN }}
           SHINYAPPS_SECRET: ${{ secrets.SHINYAPPS_SECRET }}
-        run: Rscript R/deploy.R
+        run: Rscript deploy.R
